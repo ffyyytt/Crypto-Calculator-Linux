@@ -37,6 +37,12 @@ uint8 md5::getBuffer(int position)
     return buffer[position];
 }
 
+void md5::set_m(unsigned int _m_tot_len, unsigned int _m_len)
+{
+    total[0] = _m_tot_len + _m_len;
+    total[1] = 0;
+}
+
 void md5::init(uint32 s0, uint32 s1, uint32 s2, uint32 s3)
 {
     total[0] = 0;
@@ -240,4 +246,20 @@ void md5::final(uint8* digest)
     PUT_UINT32(state[1], digest, 4);
     PUT_UINT32(state[2], digest, 8);
     PUT_UINT32(state[3], digest, 12);
+}
+
+void md5::assign(uint8* digest)
+{
+    GET_UINT32(state[0], digest, 0);
+    GET_UINT32(state[1], digest, 4);
+    GET_UINT32(state[2], digest, 8);
+    GET_UINT32(state[3], digest, 12);
+}
+
+void Hash::bytesToHex(uint8* str, int n, char* output)
+{
+    for (int j = 0; j < n; j++)
+    {
+        sprintf(output + j * 2, "%02x", str[j]);
+    }
 }

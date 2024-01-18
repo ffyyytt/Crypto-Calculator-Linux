@@ -17,8 +17,7 @@ public:
     void setBuffer(int position, uint8 value);
     uint64 getState(int position);
     uint8 getBuffer(int position);
-    void set_m_tot_len(unsigned int value);
-    void set_m_len(unsigned int value);
+    void set_m(unsigned int _m_tot_len, unsigned int _m_len);
     unsigned int get_m_tot_len();
     unsigned int get_m_len();
 
@@ -26,7 +25,7 @@ public:
         uint32 s4 = 0x510e527f, uint32 s5 = 0x9b05688c, uint32 s6 = 0x1f83d9ab, uint32 s7 = 0x5be0cd19);
     void update(uint8* message, unsigned int len);
     void final(uint8* digest);
-    
+    void assign(uint8* digest);
 
     void transform(uint8* message, unsigned int block_nb);
     unsigned int m_tot_len;
@@ -62,8 +61,7 @@ public:
     void setBuffer(int position, uint8 value);
     uint64 getState(int position);
     uint8 getBuffer(int position);
-    void set_m_tot_len(unsigned int value);
-    void set_m_len(unsigned int value);
+    void set_m(unsigned int _m_tot_len, unsigned int _m_len);
     unsigned int get_m_tot_len();
     unsigned int get_m_len();
 
@@ -72,6 +70,7 @@ public:
         uint64 s6=0x1f83d9abfb41bd6bULL, uint64 s7=0x5be0cd19137e2179ULL);
     void update(uint8* message, unsigned int len);
     void final(uint8* digest);
+    void assign(uint8* digest);
 
 protected:
     void transform(uint8* message, unsigned int block_nb);

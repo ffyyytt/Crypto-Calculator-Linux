@@ -37,6 +37,12 @@ uint8 sha1::getBuffer(int position)
 	return buffer[position];
 }
 
+void sha1::set_m(unsigned int _m_tot_len, unsigned int _m_len)
+{
+	total[0] = _m_tot_len + _m_len;
+	total[1] = 0;
+}
+
 void sha1::init(uint32 s0, uint32 s1, uint32 s2, uint32 s3, uint32 s4)
 {
 	total[0] = 0;
@@ -276,4 +282,13 @@ void sha1::final(uint8* digest)
 	PUT_UINT32(state[2], digest, 8);
 	PUT_UINT32(state[3], digest, 12);
 	PUT_UINT32(state[4], digest, 16);
+}
+
+void sha1::assign(uint8* digest)
+{
+	GET_UINT32(state[0], digest, 0);
+	GET_UINT32(state[1], digest, 4);
+	GET_UINT32(state[2], digest, 8);
+	GET_UINT32(state[3], digest, 12);
+	GET_UINT32(state[4], digest, 16);
 }

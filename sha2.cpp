@@ -22,6 +22,13 @@
     *((str) + 1) = (uint8) ((x) >> 16);       \
     *((str) + 0) = (uint8) ((x) >> 24);       \
 }
+#define SHA2_MYPACK32(str, x)                 \
+{                                             \
+    (x) = (uint32) (((str) + 0)  << 24);      \
+    (x) += (uint32) (((str) + 1) << 16);      \
+    (x) += (uint32) (((str) + 2)  << 8);      \
+    (x) += (uint32) (((str) + 1)      );      \
+}
 #define SHA2_PACK32(str, x)                   \
 {                                             \
     *(x) =   ((uint32) *((str) + 3)      )    \
@@ -187,14 +194,10 @@ uint8 sha256::getBuffer(int position)
     return buffer[position];
 }
 
-void sha256::set_m_tot_len(unsigned int value)
+void sha256::set_m(unsigned int _m_tot_len, unsigned int _m_len)
 {
-    m_tot_len = value;
-}
-
-void sha256::set_m_len(unsigned int value)
-{
-    m_len = value;
+    m_tot_len = _m_tot_len;
+    m_len = _m_len;
 }
 
 unsigned int sha256::get_m_tot_len()
@@ -298,6 +301,13 @@ void sha256::final(uint8* digest)
 
     for (int i = 0; i < 8; i++) {
         SHA2_UNPACK32(state[i], &digest[i << 2]);
+    }
+}
+
+void sha256::assign(uint8* digest)
+{
+    for (int i = 0; i < 8; i++) {
+        SHA2_PACK32(&digest[i << 2], &state[i]);
     }
 }
 
@@ -415,14 +425,10 @@ uint8 sha512::getBuffer(int position)
     return buffer[position];
 }
 
-void sha512::set_m_tot_len(unsigned int value)
+void sha512::set_m(unsigned int _m_tot_len, unsigned int _m_len)
 {
-    m_tot_len = value;
-}
-
-void sha512::set_m_len(unsigned int value)
-{
-    m_len = value;
+    m_tot_len = _m_tot_len;
+    m_len = _m_len;
 }
 
 unsigned int sha512::get_m_tot_len()
@@ -477,7 +483,6 @@ void sha512::final(uint8* digest)
     unsigned int block_nb;
     unsigned int pm_len;
     unsigned int len_b;
-    int i;
     block_nb = 1 + ((SHA384_512_BLOCK_SIZE - 17)
         < (m_len % SHA384_512_BLOCK_SIZE));
     len_b = (m_tot_len + m_len) << 3;
@@ -486,7 +491,14 @@ void sha512::final(uint8* digest)
     buffer[m_len] = 0x80;
     SHA2_UNPACK32(len_b, buffer + pm_len - 4);
     transform(buffer, block_nb);
-    for (i = 0; i < 8; i++) {
+    for (int i = 0; i < 8; i++) {
         SHA2_UNPACK64(state[i], &digest[i << 3]);
+    }
+}
+
+void sha512::assign(uint8* digest)
+{
+    for (int i = 0; i < 8; i++) {
+        SHA2_PACK64(&digest[i << 3], &state[i]);
     }
 }

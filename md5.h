@@ -1,8 +1,10 @@
 #pragma once
+#define _CRT_SECURE_NO_WARNINGS
 #ifndef _MD5_H
 #define _MD5_H
-
-#include <unistd.h>
+#include <stdio.h>
+#include <cstdint>
+#include <iostream>
 
 #ifndef uint8
 #define uint8 unsigned char
@@ -16,25 +18,23 @@
 #define uint64 unsigned long long
 #endif
 
-#include <cmath>
-#include <iostream>
-
 class Hash
 {
 public:
 	virtual void init() {};
-	virtual void update(uint8*, unsigned int) {};
-	virtual void final(uint8*) {};
+	virtual void update(uint8* input, unsigned int len) {};
+	virtual void final(uint8* digest) {};
 	virtual unsigned int getDigestSize() { return 0; };
 	virtual unsigned int getBlockSize() { return 0; };
-	virtual void setState(int, uint64) {};
-	virtual void setBuffer(int, uint8) {};
-	virtual uint64 getState(int) { return 0; };
-	virtual uint8 getBuffer(int) { return 0; };
-	virtual void set_m_tot_len(unsigned int) {};
-	virtual void set_m_len(unsigned int) {};
-	virtual unsigned int get_m_tot_len(unsigned int) { return 0; };
-	virtual unsigned int get_m_len(unsigned int) { return 0; };
+	virtual void assign(uint8* digest) {};
+	virtual void setState(int position, uint64 value) {};
+	virtual void setBuffer(int position, uint8 value) {};
+	virtual uint64 getState(int position) { return 0; };
+	virtual uint8 getBuffer(int position) { return 0; };
+	virtual void set_m(unsigned int _m_tot_len, unsigned int _m_len) {};
+	virtual unsigned int get_m_tot_len(unsigned int value) { return 0; };
+	virtual unsigned int get_m_len(unsigned int value) { return 0; };
+	static void bytesToHex(uint8* str, int n, char* output);
 };
 
 class md5 : public Hash
@@ -53,10 +53,12 @@ public:
 	void setBuffer(int position, uint8 value);
 	uint64 getState(int position);
 	uint8 getBuffer(int position);
+	void set_m(unsigned int _m_tot_len, unsigned int _m_len);
 
 	void init(uint32 s0 = 0x67452301, uint32 s1 = 0xEFCDAB89, uint32 s2 = 0x98BADCFE, uint32 s3 = 0x10325476);
 	void update(uint8* input, uint32 length);
 	void final(uint8* digest);
+	void assign(uint8* digest);
 };
 
 #endif /* md5.h */
