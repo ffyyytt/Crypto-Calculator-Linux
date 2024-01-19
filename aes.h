@@ -62,6 +62,8 @@ private:
 public:
     static unsigned char* pkcs7_padding(unsigned char* in, unsigned int inLen, unsigned int modulus=blockBytesLen);
 
+    static unsigned char* pkcs7_unpad(unsigned char* in, unsigned int inLen, unsigned int modulus = blockBytesLen);
+
     static unsigned int pkcs7_padding_length(unsigned int inLen, unsigned int modulus = blockBytesLen);
 
     static void getFirstKey(const unsigned char key[], unsigned char firstKey[], int round);
