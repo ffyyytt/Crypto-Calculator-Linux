@@ -1,4 +1,4 @@
-#include "aes.h"
+#include "AES.h"
 
 AES::AES(const AESKeyLength keyLength) {
     switch (keyLength) {
@@ -174,6 +174,14 @@ unsigned char* AES::pkcs7_padding(unsigned char* in, unsigned int inLen, unsigne
     for (int i = 0; i < pad_byte; i++) {
         out[inLen + i] = pad_byte;
     }
+    return out;
+}
+
+unsigned char* AES::pkcs7_unpad(unsigned char* in, unsigned int inLen, unsigned int modulus)
+{
+    unsigned char* out = new unsigned char[pkcs7_padding_length(inLen) + 1];
+    memcpy(out, in, inLen * sizeof(unsigned char));
+    out[pkcs7_padding_length(inLen) - out[pkcs7_padding_length(inLen) - 1]] = '\0';
     return out;
 }
 
