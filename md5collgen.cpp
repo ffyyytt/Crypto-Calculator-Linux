@@ -1583,19 +1583,6 @@ void md5collgen(std::string& prefixfn, std::string& outfn1, std::string& outfn2,
 			break;
 	}
 
-	uint32 c;
-	for (unsigned i = 0; i < 4; ++i)
-	{
-		IV[i] = 0;
-		for (unsigned b = 0; b < 4; ++b)
-		{
-			std::stringstream ss;
-			ss << ihv.substr(i * 8 + b * 2, 2);
-			ss >> std::hex >> c;
-			IV[i] += c << (b * 8);
-		}
-	}
-
 	uint32 msg1block0[16];
 	uint32 msg1block1[16];
 	uint32 msg2block0[16];
